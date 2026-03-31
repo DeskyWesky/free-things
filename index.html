@@ -93,175 +93,206 @@
       margin-top: 30px;
       font-size: 20px;
     }
+
+    /* Backup banner */
+    #backupBanner {
+      background: #facc15;
+      color: #0f172a;
+      padding: 10px;
+      font-weight: bold;
+      position: relative;
+    }
+
+    #backupBanner a {
+      color: #0f172a;
+      text-decoration: underline;
+    }
+
+    #backupBanner span {
+      position: absolute;
+      right: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* Credits box in bottom-right corner */
+    #credits {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(30, 41, 59, 0.8);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      z-index: 1000;
+      pointer-events: none;
+    }
+
   </style>
 </head>
 
 <body>
-  
-<div id="BackupWebsite" style="background:#facc15; color:#0f172a; padding:10px; font-weight:bold; position:relative;">
-  ⚠️ This site might get blocked! Use the <a href="https://classlink-free.vercel.app/" target="_blank" style="color:#0f172a; text-decoration:underline;">backup link</a>.
-  <span onclick="document.getElementById('backupBanner').style.display='none'" 
-        style="position:absolute; right:10px; cursor:pointer; font-weight:bold;">✖</span>
-</div>
-  
-<h1>PlayUnblocked</h1>
 
-<input id="search" placeholder="Search games...">
-
-<div class="section-title">⭐ Favorites</div>
-<div class="grid" id="favorites"></div>
-
-<div class="section-title">🧠 Recently Played</div>
-<div class="grid" id="recent"></div>
-
-<div class="section-title">🎮 All Games</div>
-<div class="grid" id="games"></div>
-
-<!-- GAME PLAYER -->
-<div id="gameContainer">
-  <div id="gameBar">
-    <button onclick="goFullScreen()">Fullscreen</button>
-    <button onclick="openBlank()">Open in New Tab</button>
-    <button onclick="closeGame()">Close</button>
+  // BAckupWebsite
+  <div id="BackupWebsite">
+    ⚠️ This site might get blocked by your school! Use the <a href="https://classlink-free.vercel.app/" target="_blank">backup link</a>.
+    <span onclick="document.getElementById('BackupWebsite').style.display='none'">✖</span>
   </div>
-  <iframe id="gameFrame"></iframe>
-</div>
 
-<script>
-// Game list with images
-const gameList = [
-  { name: "Gorilla Tag", file: "Gorilla Tag.html", img: "https://image2url.com/r2/default/images/1774997576158-87d07070-a20a-4848-854b-19e028e1cb4d.png" },
-  { name: "SoundBoard", file: "Soundboard.html", img: "https://image2url.com/r2/default/images/1774997631238-4a94c4a3-288c-4883-9906-e826b0c8289e.png" },
-  { name: "BasketBros", file: "Basket Bros.html", img: "https://image2url.com/r2/default/images/1774997596360-3c14b6d8-24a1-4d6a-b2e8-af861411d348.png" },
-  { name: "Five Nights At Epstein's", file: "Five Nights at Epstein's.html", img: "https://image2url.com/r2/default/images/1774997501040-6b54e707-3295-424f-8967-dd9f8a10d379.png" },
-  { name: "Baseball Bros", file: "Baseball Bros.html", img: "https://pub-1407f82391df4ab1951418d04be76914.r2.dev/uploads/7025a27d-bf6e-46f8-a866-7871e525af9c.png" }
-];
+  <h1>PlayUnblocked</h1>
 
-let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-let recent = JSON.parse(localStorage.getItem("recent")) || [];
+  <input id="search" placeholder="Search games...">
 
-// Render all games
-function renderGames() {
-  const container = document.getElementById("games");
-  container.innerHTML = "";
+  <div class="section-title">⭐ Favorites</div>
+  <div class="grid" id="favorites"></div>
 
-  gameList.forEach(game => {
-    let card = document.createElement("div");
-    card.className = "card";
+  <div class="section-title">🧠 Recently Played</div>
+  <div class="grid" id="recent"></div>
 
-    card.innerHTML = `
-      <div class="fav" onclick="toggleFavorite(event, '${game.name}')">
-        ${favorites.includes(game.name) ? "⭐" : "☆"}
-      </div>
-      <img src="${game.img}" alt="${game.name}">
-      <p>${game.name}</p>
-    `;
+  <div class="section-title">🎮 All Games</div>
+  <div class="grid" id="games"></div>
 
-    card.onclick = () => openGame(game.file, game.name);
-    container.appendChild(card);
-  });
-}
+  // Game Player
+  <div id="gameContainer">
+    <div id="gameBar">
+      <button onclick="goFullScreen()">Fullscreen</button>
+      <button onclick="openBlank()">Open in New Tab</button>
+      <button onclick="closeGame()">Close</button>
+    </div>
+    <iframe id="gameFrame"></iframe>
+  </div>
 
-// Toggle favorite
-function toggleFavorite(e, name) {
-  e.stopPropagation();
-  if (favorites.includes(name)) favorites = favorites.filter(f => f !== name);
-  else favorites.push(name);
+  // Credits
+  <div id="credits">Made by Gio</div>
 
-  localStorage.setItem("favorites", JSON.stringify(favorites));
-  renderFavorites();
-  renderGames();
-}
+  <script>
+    // Game list with images
+    const gameList = [
+      { name: "Gorilla Tag", file: "Gorilla Tag.html", img: "https://image2url.com/r2/default/images/1774997576158-87d07070-a20a-4848-854b-19e028e1cb4d.png" },
+      { name: "SoundBoard", file: "Soundboard.html", img: "https://image2url.com/r2/default/images/1774997631238-4a94c4a3-288c-4883-9906-e826b0c8289e.png" },
+      { name: "BasketBros", file: "Basket Bros.html", img: "https://image2url.com/r2/default/images/1774997596360-3c14b6d8-24a1-4d6a-b2e8-af861411d348.png" },
+      { name: "Five Nights At Epstein's", file: "Five Nights at Epstein's.html", img: "https://image2url.com/r2/default/images/1774997501040-6b54e707-3295-424f-8967-dd9f8a10d379.png" },
+      { name: "Baseball Bros", file: "Baseball Bros.html", img: "https://pub-1407f82391df4ab1951418d04be76914.r2.dev/uploads/7025a27d-bf6e-46f8-a866-7871e525af9c.png" }
+    ];
 
-// Render favorites
-function renderFavorites() {
-  const container = document.getElementById("favorites");
-  container.innerHTML = "";
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    let recent = JSON.parse(localStorage.getItem("recent")) || [];
 
-  gameList.forEach(game => {
-    if (favorites.includes(game.name)) {
-      let card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <img src="${game.img}" alt="${game.name}">
-        <p>${game.name}</p>
-      `;
-      card.onclick = () => openGame(game.file, game.name);
-      container.appendChild(card);
+    // Render all games
+    function renderGames() {
+      const container = document.getElementById("games");
+      container.innerHTML = "";
+      gameList.forEach(game => {
+        let card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="fav" onclick="toggleFavorite(event, '${game.name}')">
+            ${favorites.includes(game.name) ? "⭐" : "☆"}
+          </div>
+          <img src="${game.img}" alt="${game.name}">
+          <p>${game.name}</p>
+        `;
+        card.onclick = () => openGame(game.file, game.name);
+        container.appendChild(card);
+      });
     }
-  });
-}
 
-// Render recently played
-function renderRecent() {
-  const container = document.getElementById("recent");
-  container.innerHTML = "";
+    // Toggle favorite
+    function toggleFavorite(e, name) {
+      e.stopPropagation();
+      if (favorites.includes(name)) favorites = favorites.filter(f => f !== name);
+      else favorites.push(name);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      renderFavorites();
+      renderGames();
+    }
 
-  recent.forEach(name => {
-    let game = gameList.find(g => g.name === name);
-    if (!game) return;
+    // Render favorites
+    function renderFavorites() {
+      const container = document.getElementById("favorites");
+      container.innerHTML = "";
+      gameList.forEach(game => {
+        if (favorites.includes(game.name)) {
+          let card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <img src="${game.img}" alt="${game.name}">
+            <p>${game.name}</p>
+          `;
+          card.onclick = () => openGame(game.file, game.name);
+          container.appendChild(card);
+        }
+      });
+    }
 
-    let card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <img src="${game.img}" alt="${game.name}">
-      <p>${game.name}</p>
-    `;
-    card.onclick = () => openGame(game.file, game.name);
-    container.appendChild(card);
-  });
-}
+    // Render recently played
+    function renderRecent() {
+      const container = document.getElementById("recent");
+      container.innerHTML = "";
+      recent.forEach(name => {
+        let game = gameList.find(g => g.name === name);
+        if (!game) return;
+        let card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <img src="${game.img}" alt="${game.name}">
+          <p>${game.name}</p>
+        `;
+        card.onclick = () => openGame(game.file, game.name);
+        container.appendChild(card);
+      });
+    }
 
-// Open game
-function openGame(url, name) {
-  document.getElementById("gameContainer").style.display = "block";
-  document.getElementById("gameFrame").src = url;
+    // Open game
+    function openGame(url, name) {
+      document.getElementById("gameContainer").style.display = "block";
+      document.getElementById("gameFrame").src = url;
+      recent = [name, ...recent.filter(r => r !== name)].slice(0, 5);
+      localStorage.setItem("recent", JSON.stringify(recent));
+      renderRecent();
+    }
 
-  recent = [name, ...recent.filter(r => r !== name)].slice(0, 5);
-  localStorage.setItem("recent", JSON.stringify(recent));
-  renderRecent();
-}
+    // Close game
+    function closeGame() {
+      document.getElementById("gameContainer").style.display = "none";
+      document.getElementById("gameFrame").src = "";
+    }
 
-// Close game
-function closeGame() {
-  document.getElementById("gameContainer").style.display = "none";
-  document.getElementById("gameFrame").src = "";
-}
+    // Fullscreen
+    function goFullScreen() {
+      let frame = document.getElementById("gameFrame");
+      if (frame.requestFullscreen) frame.requestFullscreen();
+      else if (frame.webkitRequestFullscreen) frame.webkitRequestFullscreen();
+      else if (frame.msRequestFullscreen) frame.msRequestFullscreen();
+    }
 
-// Fullscreen
-function goFullScreen() {
-  let frame = document.getElementById("gameFrame");
-  if (frame.requestFullscreen) frame.requestFullscreen();
-  else if (frame.webkitRequestFullscreen) frame.webkitRequestFullscreen();
-  else if (frame.msRequestFullscreen) frame.msRequestFullscreen();
-}
+    // Open in new tab
+    function openBlank() {
+      let url = document.getElementById("gameFrame").src;
+      let win = window.open("about:blank", "_blank");
+      if (!win) {
+        alert("Popup blocked! Allow popups for this site.");
+        return;
+      }
+      win.document.write(`
+        <iframe src="${url}" style="margin:0; padding:0; width:100%; height:100%; border:none;"></iframe>
+      `);
+    }
 
-// Open in new tab
-function openBlank() {
-  let url = document.getElementById("gameFrame").src;
-  let win = window.open("about:blank", "_blank");
-  if (!win) {
-    alert("Popup blocked! Allow popups for this site.");
-    return;
-  }
-  win.document.write(`
-    <iframe src="${url}" style="margin:0; padding:0; width:100%; height:100%; border:none;"></iframe>
-  `);
-}
+    // Search
+    document.getElementById("search").addEventListener("input", function() {
+      let value = this.value.toLowerCase();
+      document.querySelectorAll("#games .card").forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(value) ? "block" : "none";
+      });
+    });
 
-// Search
-document.getElementById("search").addEventListener("input", function() {
-  let value = this.value.toLowerCase();
-  document.querySelectorAll("#games .card").forEach(card => {
-    card.style.display = card.innerText.toLowerCase().includes(value) ? "block" : "none";
-  });
-});
-
-// Init
-renderGames();
-renderFavorites();
-renderRecent();
-</script>
+    // Init
+    renderGames();
+    renderFavorites();
+    renderRecent();
+  </script>
 
 </body>
 </html>
