@@ -9,6 +9,7 @@
       font-family: Arial;
       text-align: center;
     }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, 200px);
@@ -16,25 +17,72 @@
       padding: 20px;
       justify-content: center;
     }
+
     .card {
       background: #1e293b;
       padding: 10px;
       border-radius: 10px;
       cursor: pointer;
+      transition: 0.2s;
     }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
     img {
       width: 100%;
       border-radius: 8px;
+    }
+
+    /* 🎮 GAME OVERLAY */
+    #gameContainer {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0f172a;
+      z-index: 999;
+    }
+
+    #gameBar {
+      background: #1e293b;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    button {
+      background: #334155;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #475569;
+    }
+
+    iframe {
+      width: 100%;
+      height: calc(100% - 50px);
+      border: none;
     }
   </style>
 </head>
 
 <body>
 
-<h1>🎮 My Game Hub</h1>
+<h1>PlayUnblocked</h1>
 
 <div class="grid">
 
+  <!-- 🎮 GAME CARD -->
   <div class="card" onclick="openGame('Gorilla Tag.html')">
     <img src="https://via.placeholder.com/200">
     <p>Gorilla Tag</p>
@@ -42,9 +90,36 @@
 
 </div>
 
+<!-- 🎮 GAME PLAYER -->
+<div id="gameContainer">
+  <div id="gameBar">
+    <button onclick="goFullScreen()">Fullscreen</button>
+    <button onclick="closeGame()">Close</button>
+  </div>
+
+  <iframe id="gameFrame" src=""></iframe>
+</div>
+
 <script>
 function openGame(url) {
-  window.location.href = url;
+  document.getElementById("gameContainer").style.display = "block";
+  document.getElementById("gameFrame").src = url;
+}
+
+function closeGame() {
+  document.getElementById("gameContainer").style.display = "none";
+  document.getElementById("gameFrame").src = "";
+}
+
+function goFullScreen() {
+  let frame = document.getElementById("gameFrame");
+  if (frame.requestFullscreen) {
+    frame.requestFullscreen();
+  } else if (frame.webkitRequestFullscreen) {
+    frame.webkitRequestFullscreen();
+  } else if (frame.msRequestFullscreen) {
+    frame.msRequestFullscreen();
+  }
 }
 </script>
 
