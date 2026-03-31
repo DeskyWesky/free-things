@@ -1,1 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Game Hub</title>
+  <style>
+    body {
+      background: #0f172a;
+      color: white;
+      font-family: Arial;
+      text-align: center;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 200px);
+      gap: 20px;
+      padding: 20px;
+      justify-content: center;
+    }
+    .card {
+      background: #1e293b;
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    img {
+      width: 100%;
+      border-radius: 8px;
+    }
+  </style>
+</head>
 
+<body>
+
+<h1>🎮 My Game Hub</h1>
+
+<div class="grid">
+
+  <div class="card" onclick="openGame('games/game1/index.html')">
+    <img src="https://via.placeholder.com/200">
+    <p>Game 1</p>
+  </div>
+
+</div>
+
+<script>
+function openGame(url) {
+  window.location.href = url;
+}
+</script>
+
+</body>
+</html>
