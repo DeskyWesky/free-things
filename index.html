@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>My Game Hub</title>
+
   <style>
     body {
       background: #0f172a;
@@ -10,6 +11,18 @@
       text-align: center;
     }
 
+    h1 { margin-top: 20px; }
+
+    /* 🔍 SEARCH */
+    #search {
+      padding: 10px;
+      width: 300px;
+      border-radius: 8px;
+      border: none;
+      margin: 20px;
+    }
+
+    /* 🎮 GRID */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, 200px);
@@ -24,6 +37,7 @@
       border-radius: 10px;
       cursor: pointer;
       transition: 0.2s;
+      position: relative;
     }
 
     .card:hover {
@@ -33,6 +47,15 @@
     img {
       width: 100%;
       border-radius: 8px;
+    }
+
+    /* ⭐ FAVORITE BUTTON */
+    .fav {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      cursor: pointer;
+      font-size: 18px;
     }
 
     /* 🎮 GAME OVERLAY */
@@ -50,9 +73,6 @@
     #gameBar {
       background: #1e293b;
       padding: 10px;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
     }
 
     button {
@@ -62,10 +82,7 @@
       padding: 8px 12px;
       border-radius: 6px;
       cursor: pointer;
-    }
-
-    button:hover {
-      background: #475569;
+      margin: 5px;
     }
 
     iframe {
@@ -73,22 +90,29 @@
       height: calc(100% - 50px);
       border: none;
     }
+
+    /* SECTIONS */
+    .section-title {
+      margin-top: 30px;
+      font-size: 20px;
+    }
   </style>
 </head>
 
 <body>
 
-<h1>PlayUnblocked</h1>
+<h1>🎮 My Game Hub</h1>
 
-<div class="grid">
+<input id="search" placeholder="Search games...">
 
-  <!-- 🎮 GAME CARD -->
-  <div class="card" onclick="openGame('Gorilla Tag.html')">
-    <img src="https://via.placeholder.com/200">
-    <p>Gorilla Tag</p>
-  </div>
+<div class="section-title">⭐ Favorites</div>
+<div class="grid" id="favorites"></div>
 
-</div>
+<div class="section-title">🧠 Recently Played</div>
+<div class="grid" id="recent"></div>
+
+<div class="section-title">🎮 All Games</div>
+<div class="grid" id="games"></div>
 
 <!-- 🎮 GAME PLAYER -->
 <div id="gameContainer">
@@ -96,14 +120,90 @@
     <button onclick="goFullScreen()">Fullscreen</button>
     <button onclick="closeGame()">Close</button>
   </div>
-
-  <iframe id="gameFrame" src=""></iframe>
+  <iframe id="gameFrame"></iframe>
 </div>
 
 <script>
-function openGame(url) {
+const gameList = [
+  { name: "Gorilla Tag", file: "gorilla-tag.html" },
+  { name: "Game 2", file: "games/game2/" },
+  { name: "Game 3", file: "games/game3/" }
+];
+
+let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+let recent = JSON.parse(localStorage.getItem("recent")) || [];
+
+function renderGames() {
+  const container = document.getElementById("games");
+  container.innerHTML = "";
+
+  gameList.forEach(game => {
+    let card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="fav" onclick="toggleFavorite(event, '${game.name}')">
+        ${favorites.includes(game.name) ? "⭐" : "☆"}
+      </div>
+      <p>${game.name}</p>
+    `;
+
+    card.onclick = () => openGame(game.file, game.name);
+    container.appendChild(card);
+  });
+}
+
+function toggleFavorite(e, name) {
+  e.stopPropagation();
+
+  if (favorites.includes(name)) {
+    favorites = favorites.filter(f => f !== name);
+  } else {
+    favorites.push(name);
+  }
+
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+  renderFavorites();
+  renderGames();
+}
+
+function renderFavorites() {
+  const container = document.getElementById("favorites");
+  container.innerHTML = "";
+
+  gameList.forEach(game => {
+    if (favorites.includes(game.name)) {
+      let card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `<p>${game.name}</p>`;
+      card.onclick = () => openGame(game.file, game.name);
+      container.appendChild(card);
+    }
+  });
+}
+
+function renderRecent() {
+  const container = document.getElementById("recent");
+  container.innerHTML = "";
+
+  recent.forEach(name => {
+    let game = gameList.find(g => g.name === name);
+    if (!game) return;
+
+    let card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `<p>${game.name}</p>`;
+    card.onclick = () => openGame(game.file, game.name);
+    container.appendChild(card);
+  });
+}
+
+function openGame(url, name) {
   document.getElementById("gameContainer").style.display = "block";
   document.getElementById("gameFrame").src = url;
+
+  recent = [name, ...recent.filter(r => r !== name)].slice(0, 5);
+  localStorage.setItem("recent", JSON.stringify(recent));
+  renderRecent();
 }
 
 function closeGame() {
@@ -113,14 +213,21 @@ function closeGame() {
 
 function goFullScreen() {
   let frame = document.getElementById("gameFrame");
-  if (frame.requestFullscreen) {
-    frame.requestFullscreen();
-  } else if (frame.webkitRequestFullscreen) {
-    frame.webkitRequestFullscreen();
-  } else if (frame.msRequestFullscreen) {
-    frame.msRequestFullscreen();
-  }
+  if (frame.requestFullscreen) frame.requestFullscreen();
 }
+
+document.getElementById("search").addEventListener("input", function() {
+  let value = this.value.toLowerCase();
+  document.querySelectorAll("#games .card").forEach(card => {
+    card.style.display = card.innerText.toLowerCase().includes(value)
+      ? "block" : "none";
+  });
+});
+
+/* INIT */
+renderGames();
+renderFavorites();
+renderRecent();
 </script>
 
 </body>
